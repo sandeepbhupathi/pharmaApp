@@ -1,10 +1,17 @@
 package com.pharma.config;
 
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 
 @Configuration
 @ComponentScan({"com.pharma.config.*"})
@@ -19,15 +26,27 @@ public class AppConfig {
 
     }
 
-   /* @Bean 
-    public FreeMarkerConfigurer freemarkerConfig() throws TemplateException { 
-        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer(); 
-        freeMarkerConfigurer.setTemplateLoaderPath("/WEB-INF/views/ftl/");
-
-        Properties settings = new Properties();
-        settings.setProperty(freemarker.template.Configuration.TEMPLATE_EXCEPTION_HANDLER_KEY, "rethrow");
-        freeMarkerConfigurer.setFreemarkerSettings(settings);
-        return freeMarkerConfigurer; 
-    }*/
-
+    @Bean
+	public HibernateTemplate hibernateTemplate() {
+		return new HibernateTemplate(sessionFactory());
+	}
+	@Bean
+	public SessionFactory sessionFactory() {
+		return new LocalSessionFactoryBuilder(getDataSource())
+		   .addPackage("com.pharma.config.entity")
+		   .buildSessionFactory();
+	}
+	@Bean
+	public DataSource getDataSource() {
+	    BasicDataSource dataSource = new BasicDataSource();
+	    dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+	    dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:orcl");
+	    dataSource.setUsername("pharmacy");
+	    dataSource.setPassword("pharmacy");
+	    return dataSource;
+	}
+	@Bean
+	public HibernateTransactionManager hibTransMan(){
+		return new HibernateTransactionManager(sessionFactory());
+	}
 }
