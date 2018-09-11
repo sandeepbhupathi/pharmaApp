@@ -1,9 +1,5 @@
 package com.pharma.config.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -14,7 +10,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.pharma.config.dto.Order;
 import com.pharma.config.dto.User;
 import com.pharma.config.entity.Admin;
 import com.pharma.config.entity.CustOrders;
