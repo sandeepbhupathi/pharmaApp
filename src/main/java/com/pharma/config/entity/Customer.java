@@ -2,10 +2,14 @@ package com.pharma.config.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity(name="NEWCUST4")
+@Entity
+@Table(name="NEWCUST4")
 public class Customer {
 	
+	@Id
 	@Column(name = "ID")
 	private int id;
 	@Column(name = "USERNAME")

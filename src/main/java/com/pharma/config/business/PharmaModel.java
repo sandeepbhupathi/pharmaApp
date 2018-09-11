@@ -1,5 +1,6 @@
 package com.pharma.config.business;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class PharmaModel {
 	}
 
 	public boolean isValidLogon(User user) {
-		return pharmaDao.isValidCustomer(user);
+		return pharmaDao.isValidCustomerLogon(user);
 	}
 
 	public boolean createCustomerOrder(Order order) {
@@ -28,15 +29,27 @@ public class PharmaModel {
 	}
 
 	public boolean isValidAdminLogon(User user) {
-		return pharmaDao.isValidAdmin(user);
+		return pharmaDao.isValidAdminLogon(user);
 	}
 
 	public List<User> findAllCustomers() {
-		return pharmaDao.findAllCustomers();
+		List<User> userList= new ArrayList<User>();
+		pharmaDao.findAllCustomers(null).forEach((cust)->{
+			userList.add(new User(cust.getUserName(),cust.getPassword(),cust.getAddress(),
+					cust.getEmail(),cust.getId(),Double.parseDouble(cust.getPhone())));
+		});
+		
+		return userList;
 	}
 
 	public List<Order> findAllCustomersOrders() {
-		return pharmaDao.findAllCustomersOrders(null);
+		List<Order> orderList = new ArrayList<>();
+		pharmaDao.findAllCustomersOrders(null).forEach((order)->{
+			orderList.add(new Order(order.getProdCode(),order.getId()+"",
+									order.getOrderq().toString(),order.getMinq().toString(),
+									order.getNetcost().toString(),order.getAmount().toString(),order.getProdName()));
+		});
+		return orderList;
 	}
 
 	public boolean deleteCustOrder(String orderid) {
@@ -44,11 +57,11 @@ public class PharmaModel {
 	}
 
 	public boolean isOrderExists(String orderid) {
-		return pharmaDao.isOrderExists(orderid);
+		return pharmaDao.findAllCustomersOrders(orderid).size()>0?true:false;
 	}
 
 	public boolean isCustmerExists(String custid) {
-		return pharmaDao.isCustemerExistins(custid);
+		return pharmaDao.findAllCustomers(custid).size()>0?true:false;
 	}
 
 	public boolean deleteCustomer(String custid) {
@@ -60,6 +73,12 @@ public class PharmaModel {
 	}
 
 	public Order findAllOrders(String orderid) {
-		return pharmaDao.findAllCustomersOrders(orderid).get(0);
+		List<Order> orderList = new ArrayList<>();
+		pharmaDao.findAllCustomersOrders(orderid).forEach((order)->{
+			orderList.add(new Order(order.getProdCode(),order.getId()+"",
+									order.getOrderq().toString(),order.getMinq().toString(),
+									order.getNetcost().toString(),order.getAmount().toString(),order.getProdName()));
+		});
+		return orderList.get(0);
 	}
 }

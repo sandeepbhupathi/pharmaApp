@@ -4,17 +4,29 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.pharma.config.dto.Order;
 import com.pharma.config.dto.User;
+import com.pharma.config.entity.Admin;
+import com.pharma.config.entity.CustOrders;
+import com.pharma.config.entity.Customer;
+import com.pharma.config.entity.DistributerAdmin;
 
 @Repository
+@Transactional
 public class PharmaDAO {
 
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	public boolean customerRegister(User user){
 		Connection con=GetCon.getCon();
 		PreparedStatement ps;
@@ -44,25 +56,6 @@ public class PharmaDAO {
 		return status==1?true:false;
 	}
 
-	public boolean isValidCustomer(User user) {
-		boolean status=false;
-		Connection con=GetCon.getCon();
-		PreparedStatement ps;
-		try {
-			ps = con.prepareStatement("Select * from NEWCUST4 where username = ? and password = ?");
-			ps.setString(1,user.getUserName());
-			ps.setString(2,user.getPassword());
-			
-			ResultSet rs=ps.executeQuery();
-			status=rs.next();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			
-		}
-		return status;
-		
-	}
-
 	public boolean createCustomerOrder(Order order) {
 		 Connection con=GetCon.getCon();
 		 PreparedStatement ps;
@@ -89,157 +82,78 @@ public class PharmaDAO {
 		return state; 
 	}
 
-	public boolean isValidAdmin(User user) {
-
-		boolean status=false;
-		Connection con=GetCon.getCon();
-		try {
-			PreparedStatement ps=con.prepareStatement("Select * from PHARMACYADMIN where username = ? and password = ?");
-			ps.setString(1,user.getUserName());
-			ps.setString(2,user.getPassword());
-			
-			ResultSet rs=ps.executeQuery();
-			status=rs.next();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+	@SuppressWarnings("unchecked")
+	public List<Customer> findAllCustomers(String custId) {
+		String queryString = "from Customer a";
+		if (custId != null) {
+			queryString = queryString + " where a.id=:id";
 		}
-		return status;
+		Query query = sessionFactory.getCurrentSession().createQuery(queryString, Customer.class);
+		if (custId != null) {
+			query.setParameter("id", Integer.parseInt(custId));
+		}
+		return query.getResultList();
 	}
 
-	public List<User> findAllCustomers() {
-	 	List<User> userList = new ArrayList<User>();
-	 	User eachUser = null;
-		try {
-			Connection con=GetCon.getCon();
-			PreparedStatement ps=con.prepareStatement("Select * from newcust4");
-			ResultSet rs=ps.executeQuery();
-			
-			while(rs.next()){
-				eachUser = new User();
-				//int id=rs.getInt(1);
-				eachUser.setId(rs.getInt(1));
-				eachUser.setUserName(rs.getString(2));
-				eachUser.setPassword(rs.getString(3));
-				eachUser.setAdderess(rs.getString(6) );
-				eachUser.setCustPhoneNumber(rs.getString(11));
-				eachUser.setEmail(rs.getString(12));
-				userList.add(eachUser);
-			}
-	
-		} catch (SQLException e) {
-			e.printStackTrace();
+	@SuppressWarnings("unchecked")
+	public List<CustOrders> findAllCustomersOrders(String orderId) {
+		String queryString = "from CustOrders a";
+		if (orderId != null) {
+			queryString = queryString + " where a.id=:id";
 		}
-		return userList;
-	}
+		Query query = sessionFactory.getCurrentSession().createQuery(queryString, CustOrders.class);
 
-	public List<Order> findAllCustomersOrders(String orderId) {
-		List<Order> orderList = new ArrayList<Order>();
-		Order eachorder=null;
-		try{
-			Connection con=GetCon.getCon();
-			PreparedStatement ps;
-			if(orderId!=null){
-				ps=con.prepareStatement("Select * from neworder4 where id = '"+orderId+"'");
-			}else{
-				ps=con.prepareStatement("Select * from neworder4 ");
-			}
-			ResultSet rs=ps.executeQuery();
-			while(rs.next()){
-				eachorder = new Order();
-				eachorder.setId(rs.getString(1));
-				eachorder.setCode(rs.getString(2));
-				eachorder.setProductName(rs.getString(3));
-				eachorder.setMinqStr(rs.getString(5));
-				eachorder.setOrderqStr(rs.getString(6));
-				eachorder.setNetCostStr(rs.getString(8));
-				eachorder.setAmountStr(rs.getString(9));
-				orderList.add(eachorder);
-			}
-		}catch(SQLException e){
-			e.printStackTrace();
+		if (orderId != null) {
+			query.setParameter("id", Long.parseLong(orderId));
 		}
-		return orderList;
+
+		return query.getResultList();
 	}
 
 	public boolean deleteCustOrder(String orderid) {
-		Connection con=GetCon.getCon();
-		boolean state=false;
-		try {
-			PreparedStatement ps=con.prepareStatement("delete  from neworder4 where id = '"+orderid+"' ");
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				state=true;
-			}	 
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-	  	
-		return state;
-	}
+		Query query = sessionFactory.getCurrentSession().createQuery("delete from CustOrders a where a.id=:id");
+		query.setParameter("id", Long.parseLong(orderid));
 
-	public boolean isOrderExists(String orderid) {
-		Connection con=GetCon.getCon();
-		boolean state=false;
-		try {
-			PreparedStatement ps=con.prepareStatement("select *  from neworder4 where id = '"+orderid+"' ");
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				state=true;
-			}	 
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-	  	
-		return state;
-	}
-
-	public boolean isCustemerExistins(String custid) {
-		Connection con=GetCon.getCon();
-		boolean state=false;
-		try {
-			PreparedStatement ps=con.prepareStatement("select *  from newcust4 where id = '"+custid+"' ");
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				state=true;
-			}	 
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-	  	
-		return state;
+		return query.executeUpdate() >= 1 ? true : false;
 	}
 
 	public boolean deleteCustomer(String custid) {
-		Connection con=GetCon.getCon();
-		boolean state=false;
-		try {
-			PreparedStatement ps=con.prepareStatement("delete  from newcust4 where id = '"+custid+"' ");
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				state=true;
-			}	 
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-	  	
-		return state;
+		Query query = sessionFactory.getCurrentSession().createQuery("delete from Customer a where a.id=:id");
+		query.setParameter("id", Integer.parseInt(custid));
+
+		return query.executeUpdate() >= 1 ? true : false;
 	}
 
 	public boolean isValidDistributerLogon(User user) {
-		boolean status=false;
-		Connection con=GetCon.getCon();
-		try {
-			PreparedStatement ps=con.prepareStatement("Select * from DISTRIBUTERADMIN where username = ? and password = ?");
-			ps.setString(1,user.getUserName());
-			ps.setString(2,user.getPassword());
-			
-			ResultSet rs=ps.executeQuery();
-			status=rs.next();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return status;
+
+		Query query = sessionFactory.getCurrentSession().createQuery(
+				"from DistributerAdmin a where a.userName=:uname and " + "a.password=:password",
+				DistributerAdmin.class);
+
+		query.setParameter("uname", user.getUserName());
+		query.setParameter("password", user.getPassword());
+
+		return query.getSingleResult() != null ? true : false;
+	}
+
+	public boolean isValidAdminLogon(User user) {
+		Query query = sessionFactory.getCurrentSession()
+				.createQuery("from Admin a where a.userName=:uname and " + "a.password=:password", Admin.class);
+
+		query.setParameter("uname", user.getUserName());
+		query.setParameter("password", user.getPassword());
+
+		return query.getSingleResult() != null ? true : false;
+	}
+	
+	public boolean isValidCustomerLogon(User user) {
+		Query query = sessionFactory.getCurrentSession()
+				.createQuery("from Customer a where a.userName=:uname and " + "a.password=:password", Customer.class);
+
+		query.setParameter("uname", user.getUserName());
+		query.setParameter("password", user.getPassword());
+
+		return query.getSingleResult() != null ? true : false;
+
 	}
 }

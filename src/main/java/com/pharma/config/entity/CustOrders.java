@@ -2,12 +2,16 @@ package com.pharma.config.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity(name="NEWORDER4")
-public class Orders {
+@Entity
+@Table(name="NEWORDER4")
+public class CustOrders {
 	
+	@Id
 	@Column(name = "ID")
-	private String id;
+	private Long id;
 	@Column(name = "PRODCODE")
 	private String prodCode;
 	@Column(name = "PRODUCTNAME")
@@ -27,10 +31,12 @@ public class Orders {
 	@Column(name = "PAYMODE")
 	private String paymode;
 	
-	public String getId() {
+
+	
+	public Long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getProdCode() {

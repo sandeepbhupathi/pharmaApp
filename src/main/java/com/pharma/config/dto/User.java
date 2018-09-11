@@ -15,6 +15,20 @@ public class User {
 	private int id;
 	private String custPhoneNumber;
 	
+	
+	
+	public User() {
+		super();
+	}
+	public User(String userName, String password, String adderess, String email, int id, double phoneNo) {
+		super();
+		this.userName = userName;
+		this.password = password;
+		this.adderess = adderess;
+		this.email = email;
+		this.id = id;
+		this.phoneNo = phoneNo;
+	}
 	public String getCustPhoneNumber() {
 		return custPhoneNumber;
 	}

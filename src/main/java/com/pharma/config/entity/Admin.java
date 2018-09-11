@@ -2,9 +2,16 @@ package com.pharma.config.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity(name="PHARMACYADMIN")
+@Entity
+@Table(name="PHARMACYADMIN")
 public class Admin {
+	
+	@Id
+	@Column(name="ID")
+	private long id;
 	
 	@Column(name = "USERNAME")
 	private String userName;
@@ -12,6 +19,13 @@ public class Admin {
 	private String password;
 	
 	
+	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public String getUserName() {
 		return userName;
 	}

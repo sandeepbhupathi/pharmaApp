@@ -16,6 +16,21 @@ public class Order {
 	private String netCostStr;
 	private String amountStr;
 	
+	
+	
+	public Order() {
+		super();
+	}
+	public Order(String code, String id, String orderqStr, String minqStr, String netCostStr, String amountStr,String prodName) {
+		super();
+		this.code = code;
+		this.id = id;
+		this.orderqStr = orderqStr;
+		this.minqStr = minqStr;
+		this.netCostStr = netCostStr;
+		this.amountStr = amountStr;
+		this.productName=prodName;
+	}
 	public String getAmountStr() {
 		return amountStr;
 	}

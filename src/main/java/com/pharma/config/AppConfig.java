@@ -1,5 +1,7 @@
 package com.pharma.config;
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -12,9 +14,16 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.pharma.config.entity.Admin;
+import com.pharma.config.entity.CustOrders;
+import com.pharma.config.entity.Customer;
+import com.pharma.config.entity.DistributerAdmin;
 
 @Configuration
 @ComponentScan({"com.pharma.config.*"})
+@EnableTransactionManagement
 public class AppConfig {
     @Bean
     PropertyPlaceholderConfigurer getPropertyPlaceholder(){
@@ -32,9 +41,13 @@ public class AppConfig {
 	}
 	@Bean
 	public SessionFactory sessionFactory() {
-		return new LocalSessionFactoryBuilder(getDataSource())
-		   .addPackage("com.pharma.config.entity")
-		   .buildSessionFactory();
+		Properties props = new Properties();
+		props.put("hibernate.show_sql", "true");
+		props.put("hibernate.hbm2ddl.auto", "update");
+
+		return new LocalSessionFactoryBuilder(getDataSource()).addAnnotatedClasses(Admin.class,Customer.class,
+				DistributerAdmin.class,CustOrders.class)
+				.mergeProperties(props).buildSessionFactory();
 	}
 	@Bean
 	public DataSource getDataSource() {
