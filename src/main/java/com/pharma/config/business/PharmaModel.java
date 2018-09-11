@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.pharma.config.dao.PharmaDAO;
 import com.pharma.config.dto.Order;
 import com.pharma.config.dto.User;
+import com.pharma.config.entity.CustOrders;
+import com.pharma.config.entity.Customer;
 
 @Service
 public class PharmaModel {
@@ -17,7 +19,19 @@ public class PharmaModel {
 	private PharmaDAO pharmaDao;
 	
 	public boolean customerRegisteration(User user){
-		return pharmaDao.customerRegister(user);
+		Customer cust = new Customer();
+		cust.setUserName(user.getUserName());
+		cust.setPassword(user.getPassword());
+		cust.setRePassword(user.getRepassword());
+		cust.setDisName(user.getDisname());
+		cust.setAddress(user.getAdderess());
+		cust.setCityName(user.getCityname());
+		cust.setStateName(user.getStatename());
+		cust.setCityName(user.getContryName());
+		cust.setRegion(user.getRegion());
+		cust.setPhone(cust.getPhone());
+		cust.setEmail(cust.getEmail());
+		return pharmaDao.customerRegister(cust);
 	}
 
 	public boolean isValidLogon(User user) {
@@ -25,7 +39,18 @@ public class PharmaModel {
 	}
 
 	public boolean createCustomerOrder(Order order) {
-		return pharmaDao.createCustomerOrder(order);
+		CustOrders custOrder = new CustOrders();
+		custOrder.setAmount(""+order.getAmount());
+		custOrder.setDiscount(""+order.getDiscount());
+		custOrder.setProdCode(order.getCode());
+		custOrder.setProdName(order.getProductName());
+		custOrder.setTax(""+order.getTax());
+		custOrder.setMinq(""+order.getMinq());
+		custOrder.setOrderq(""+order.getOrderq());
+		custOrder.setNetcost(""+order.getNetCost());
+		custOrder.setAmount(""+order.getAmount());
+		custOrder.setPaymode(order.getModePay());
+		return pharmaDao.createCustomerOrder(custOrder);
 	}
 
 	public boolean isValidAdminLogon(User user) {
@@ -36,7 +61,7 @@ public class PharmaModel {
 		List<User> userList= new ArrayList<User>();
 		pharmaDao.findAllCustomers(null).forEach((cust)->{
 			userList.add(new User(cust.getUserName(),cust.getPassword(),cust.getAddress(),
-					cust.getEmail(),cust.getId(),Double.parseDouble(cust.getPhone())));
+					cust.getEmail(),cust.getId(),cust.getPhone()!=null?Double.parseDouble(cust.getPhone()):0));
 		});
 		
 		return userList;

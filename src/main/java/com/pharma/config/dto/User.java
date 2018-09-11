@@ -12,7 +12,7 @@ public class User {
 	private String countryName;
 	private String region;
 	private String email;
-	private int id;
+	private Long id;
 	private String custPhoneNumber;
 	
 	
@@ -20,7 +20,7 @@ public class User {
 	public User() {
 		super();
 	}
-	public User(String userName, String password, String adderess, String email, int id, double phoneNo) {
+	public User(String userName, String password, String adderess, String email, Long id, double phoneNo) {
 		super();
 		this.userName = userName;
 		this.password = password;
@@ -35,7 +35,7 @@ public class User {
 	public void setCustPhoneNumber(String custPhoneNumber) {
 		this.custPhoneNumber = custPhoneNumber;
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 	public void setEmail(String email) {
@@ -123,7 +123,7 @@ public class User {
 				+ ", countryName=" + countryName + ", region=" + region + ", email=" + email + ", phoneNo=" + phoneNo
 				+ "]";
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id=id;
 	}
 	

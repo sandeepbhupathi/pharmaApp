@@ -1,17 +1,25 @@
 package com.pharma.config.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="NEWCUST4")
-public class Customer {
+public class Customer implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
-	@Column(name = "ID")
-	private int id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 	@Column(name = "USERNAME")
 	private String userName;
 	@Column(name = "PASSWORD")
@@ -35,10 +43,10 @@ public class Customer {
 	@Column(name = "EMAIL")
 	private String email;
 	
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getUserName() {

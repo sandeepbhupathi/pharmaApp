@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,59 +28,21 @@ public class PharmaDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	public boolean customerRegister(User user){
-		Connection con=GetCon.getCon();
-		PreparedStatement ps;
-		int status = 0;
-		try {
-			ps = con.prepareStatement("Insert into NEWCUST4 values(?,?,?,?,?,?,?,?,?,?,?,?)");
-			int	nextvalue1=GetCon.getPrimaryKey();
-		 	ps.setInt(1,nextvalue1);
-		    ps.setString(2,user.getUserName());
-			ps.setString(3,user.getPassword());
-			ps.setString(4,user.getRepassword());
-			ps.setString(5,user.getDisname());
-			ps.setString(6,user.getAdderess());
-			ps.setString(7,user.getCityname());
-			ps.setString(8,user.getStatename());
-			ps.setString(9,user.getContryName());
-			ps.setString(10,user.getRegion());
-			ps.setDouble(11,user.getPhone());
-			ps.setString(12,user.getEmail());
-			
-			status=ps.executeUpdate();
-			
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
-		return status==1?true:false;
+	public boolean customerRegister(Customer cust){
+		Session session = sessionFactory.getCurrentSession();
+		session.save(cust);
+		/*if (!session.getTransaction().equals(TransactionStatus.ACTIVE))
+			session.getTransaction().commit();*/
+		/*session.close();*/
+		return true;
 	}
 
-	public boolean createCustomerOrder(Order order) {
-		 Connection con=GetCon.getCon();
-		 PreparedStatement ps;
-		 boolean state=false;
-		try {
-			ps = con.prepareStatement("insert into neworder4 values(?,?,?,?,?,?,?,?,?,?)");
-			 int nextvalue=GetCon.getPrimaryKey();
-		 	 ps.setInt(1,nextvalue);
-	         ps.setString(2,order.getCode());
-	         ps.setString(3,order.getProductName());
-	         ps.setDouble(4,order.getTax());
-	         ps.setDouble(5,order.getMinq());
-	         ps.setDouble(6,order.getOrderq());
-	         ps.setDouble(7,order.getDiscount());
-	         ps.setDouble(8,order.getNetCost());
-	         ps.setDouble(9,order.getAmount());
-	         ps.setString(10,order.getModePay());
-	         ResultSet rs=ps.executeQuery();
-	         state = rs.next();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	     
-		return state; 
+	public boolean createCustomerOrder(CustOrders order) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.save(order);
+		return true;
+		
 	}
 
 	@SuppressWarnings("unchecked")

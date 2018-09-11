@@ -60,6 +60,8 @@ public class AppConfig {
 	}
 	@Bean
 	public HibernateTransactionManager hibTransMan(){
-		return new HibernateTransactionManager(sessionFactory());
+		 HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+	      transactionManager.setSessionFactory(sessionFactory());
+	      return transactionManager;
 	}
 }
