@@ -29,6 +29,10 @@ public class User {
 		this.id = id;
 		this.phoneNo = phoneNo;
 	}
+	public User(String userName, String password) {
+		this.password = password;
+		this.userName = userName;
+	}
 	public String getCustPhoneNumber() {
 		return custPhoneNumber;
 	}

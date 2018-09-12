@@ -9,7 +9,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan({"com.pharma.config.*"})
+@ComponentScan(basePackages={"com.pharma.config.*"})
 @EnableTransactionManagement
 @Import(HibernateDBConfig.class)
 public class AppConfig {

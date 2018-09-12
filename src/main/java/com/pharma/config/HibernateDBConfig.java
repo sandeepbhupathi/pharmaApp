@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
@@ -19,6 +20,7 @@ import com.pharma.config.entity.Customer;
 import com.pharma.config.entity.DistributerAdmin;
 
 @Configuration
+@Profile("pharma")
 public class HibernateDBConfig {
 
 	@Value("${app.ora.driver}")

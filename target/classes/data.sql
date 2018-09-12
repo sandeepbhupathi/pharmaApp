@@ -1,0 +1,1 @@
+insert into PHARMACYADMIN (username,password) values ('sandeep','sandeep');
