@@ -16,9 +16,9 @@ public class PharmaAppInit implements WebApplicationInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext ();
         applicationContext.register(AppConfig.class);
-        //applicationContext.registerShutdownHook();
-
+        
         servletContext.addListener(new ContextLoaderListener(applicationContext));
+        servletContext.setInitParameter("contextInitializerClasses", "com.pharma.config.AppContextInit");
         FilterRegistration.Dynamic strutsFilter = servletContext.addFilter(
                 "StrutsDispatcher", new StrutsPrepareAndExecuteFilter());
         strutsFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");

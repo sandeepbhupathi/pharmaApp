@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ import com.pharma.config.entity.DistributerAdmin;
 @ComponentScan(basePackages={"com.pharma.config.*"})
 @EnableTransactionManagement
 public class HibernateDBTestConfig {
-/*	@Value("${app.ora.test.driver}")
+	@Value("${app.ora.test.driver}")
 	private String  dbDriver;
 	
 	@Value("${app.ora.test.url}")
@@ -36,7 +37,7 @@ public class HibernateDBTestConfig {
 	private String  dbUName;
 	
 	@Value("${app.ora.test.passwd}")
-	private String  dbPasswd;*/
+	private String  dbPasswd;
 	
 	
 	@Bean
